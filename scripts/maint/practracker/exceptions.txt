@@ -29,13 +29,13 @@
 #
 # Remember: It is better to fix the problem than to add a new exception!
 
-problem file-size /src/app/config/config.c 8494
-problem include-count /src/app/config/config.c 87
+problem file-size /src/app/config/config.c 8520
+problem include-count /src/app/config/config.c 88
 problem function-size /src/app/config/config.c:options_act_reversible() 296
 problem function-size /src/app/config/config.c:options_act() 588
 problem function-size /src/app/config/config.c:resolve_my_address() 192
-problem function-size /src/app/config/config.c:options_validate() 1209
-problem function-size /src/app/config/config.c:options_init_from_torrc() 202
+problem function-size /src/app/config/config.c:options_validate() 1220
+problem function-size /src/app/config/config.c:options_init_from_torrc() 210
 problem function-size /src/app/config/config.c:options_init_from_string() 173
 problem function-size /src/app/config/config.c:options_init_logs() 146
 problem function-size /src/app/config/config.c:parse_bridge_line() 104
@@ -49,7 +49,7 @@ problem function-size /src/app/config/confparse.c:config_assign_value() 205
 problem function-size /src/app/config/confparse.c:config_get_assigned_option() 129
 problem include-count /src/app/main/main.c 67
 problem function-size /src/app/main/main.c:dumpstats() 102
-problem function-size /src/app/main/main.c:tor_init() 136
+problem function-size /src/app/main/main.c:tor_init() 137
 problem function-size /src/app/main/main.c:sandbox_init_filter() 291
 problem function-size /src/app/main/main.c:run_tor_main_loop() 105
 problem function-size /src/app/main/ntmain.c:nt_service_install() 125
@@ -72,7 +72,7 @@ problem include-count /src/core/mainloop/mainloop.c 66
 problem function-size /src/core/mainloop/mainloop.c:conn_close_if_marked() 108
 problem function-size /src/core/mainloop/mainloop.c:run_connection_housekeeping() 123
 problem function-size /src/core/mainloop/mainloop.c:CALLBACK() 116
-problem file-size /src/core/or/channel.c 3476
+problem file-size /src/core/or/channel.c 3487
 problem function-size /src/core/or/channeltls.c:channel_tls_handle_var_cell() 160
 problem function-size /src/core/or/channeltls.c:channel_tls_process_versions_cell() 170
 problem function-size /src/core/or/channeltls.c:channel_tls_process_netinfo_cell() 214
@@ -92,8 +92,8 @@ problem function-size /src/core/or/circuitlist.c:circuits_handle_oom() 117
 problem function-size /src/core/or/circuitmux.c:circuitmux_set_policy() 110
 problem function-size /src/core/or/circuitmux.c:circuitmux_attach_circuit() 114
 problem function-size /src/core/or/circuitstats.c:circuit_build_times_parse_state() 124
-problem file-size /src/core/or/circuituse.c 3152
-problem function-size /src/core/or/circuituse.c:circuit_is_acceptable() 129
+problem file-size /src/core/or/circuituse.c 3156
+problem function-size /src/core/or/circuituse.c:circuit_is_acceptable() 133
 problem function-size /src/core/or/circuituse.c:circuit_expire_building() 394
 problem function-size /src/core/or/circuituse.c:circuit_log_ancient_one_hop_circuits() 126
 problem function-size /src/core/or/circuituse.c:circuit_build_failed() 149
@@ -112,7 +112,7 @@ problem function-size /src/core/or/connection_edge.c:connection_ap_handshake_sen
 problem function-size /src/core/or/connection_edge.c:connection_ap_handshake_socks_resolved() 106
 problem function-size /src/core/or/connection_edge.c:connection_exit_begin_conn() 184
 problem function-size /src/core/or/connection_edge.c:connection_exit_connect() 102
-problem file-size /src/core/or/connection_or.c 3121
+problem file-size /src/core/or/connection_or.c 3124
 problem include-count /src/core/or/connection_or.c 51
 problem function-size /src/core/or/connection_or.c:connection_or_group_set_badness_() 105
 problem function-size /src/core/or/connection_or.c:connection_or_client_learned_peer_id() 144
@@ -121,8 +121,8 @@ problem file-size /src/core/or/policies.c 3249
 problem function-size /src/core/or/policies.c:policy_summarize() 107
 problem function-size /src/core/or/protover.c:protover_all_supported() 117
 problem file-size /src/core/or/relay.c 3173
-problem function-size /src/core/or/relay.c:circuit_receive_relay_cell() 123
-problem function-size /src/core/or/relay.c:relay_send_command_from_edge_() 112
+problem function-size /src/core/or/relay.c:circuit_receive_relay_cell() 127
+problem function-size /src/core/or/relay.c:relay_send_command_from_edge_() 116
 problem function-size /src/core/or/relay.c:connection_ap_process_end_not_open() 194
 problem function-size /src/core/or/relay.c:connection_edge_process_relay_cell_not_open() 139
 problem function-size /src/core/or/relay.c:connection_edge_process_relay_cell() 520
@@ -289,3 +289,6 @@ problem function-size /src/tools/tor-gencert.c:parse_commandline() 111
 problem function-size /src/tools/tor-resolve.c:build_socks5_resolve_request() 104
 problem function-size /src/tools/tor-resolve.c:do_resolve() 175
 problem function-size /src/tools/tor-resolve.c:main() 112
+problem function-size /src/core/or/circuitpadding.c:circpad_machine_schedule_padding() 107
+problem function-size /src/core/or/circuitpadding_machines.c:circpad_machine_relay_hide_intro_circuits() 104
+problem function-size /src/core/or/circuitpadding_machines.c:circpad_machine_client_hide_rend_circuits() 112

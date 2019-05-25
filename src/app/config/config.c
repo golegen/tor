@@ -597,6 +597,8 @@ static config_var_t option_vars_[] = {
   V(ReducedConnectionPadding,    BOOL,     "0"),
   V(ConnectionPadding,           AUTOBOOL, "auto"),
   V(RefuseUnknownExits,          AUTOBOOL, "auto"),
+  V(CircuitPadding,              BOOL,     "1"),
+  V(ReducedCircuitPadding,       BOOL,     "0"),
   V(RejectPlaintextPorts,        CSV,      ""),
   V(RelayBandwidthBurst,         MEMUNIT,  "0"),
   V(RelayBandwidthRate,          MEMUNIT,  "0"),
@@ -2447,6 +2449,7 @@ static const struct {
   { "--quiet",                TAKES_NO_ARGUMENT },
   { "--hush",                 TAKES_NO_ARGUMENT },
   { "--version",              TAKES_NO_ARGUMENT },
+  { "--list-modules",         TAKES_NO_ARGUMENT },
   { "--library-versions",     TAKES_NO_ARGUMENT },
   { "-h",                     TAKES_NO_ARGUMENT },
   { "--help",                 TAKES_NO_ARGUMENT },
@@ -2666,6 +2669,13 @@ list_deprecated_options(void)
   for (d = option_deprecation_notes_; d->name; ++d) {
     printf("%s\n", d->name);
   }
+}
+
+/** Print all compile-time modules and their enabled/disabled status. */
+static void
+list_enabled_modules(void)
+{
+  printf("%s: %s\n", "dirauth", have_module_dirauth() ? "yes" : "no");
 }
 
 /** Last value actually set by resolve_my_address. */
@@ -3742,6 +3752,14 @@ options_validate(or_options_t *old_options, or_options_t *options,
 
   if (server_mode(options) && options->ReducedConnectionPadding != 0) {
     REJECT("Relays cannot set ReducedConnectionPadding. ");
+  }
+
+  if (server_mode(options) && options->CircuitPadding == 0) {
+    REJECT("Relays cannot set CircuitPadding to 0. ");
+  }
+
+  if (server_mode(options) && options->ReducedCircuitPadding == 1) {
+    REJECT("Relays cannot set ReducedCircuitPadding. ");
   }
 
   if (options->BridgeDistribution) {
@@ -5182,6 +5200,11 @@ options_init_from_torrc(int argc, char **argv)
 
   if (config_line_find(cmdline_only_options, "--version")) {
     printf("Tor version %s.\n",get_version());
+    return 1;
+  }
+
+  if (config_line_find(cmdline_only_options, "--list-modules")) {
+    list_enabled_modules();
     return 1;
   }
 

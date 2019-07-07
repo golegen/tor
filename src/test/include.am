@@ -32,7 +32,14 @@ endif
 
 if USEPYTHON
 TESTSCRIPTS += src/test/test_ntor.sh src/test/test_hs_ntor.sh src/test/test_bt.sh
+
+if COVERAGE_ENABLED
+# ...
+else
+# Only do this when coverage is not on, since it invokes lots of code
+# in a kind of unpredictable way.
 TESTSCRIPTS += src/test/test_rebind.sh
+endif
 endif
 
 TESTS += src/test/test src/test/test-slow src/test/test-memwipe \
@@ -113,6 +120,7 @@ src_test_test_SOURCES += \
 	src/test/test_circuitstats.c \
 	src/test/test_compat_libevent.c \
 	src/test/test_config.c \
+	src/test/test_confparse.c \
 	src/test/test_connection.c \
 	src/test/test_conscache.c \
 	src/test/test_consdiff.c \
@@ -186,6 +194,7 @@ src_test_test_SOURCES += \
 	src/test/test_status.c \
 	src/test/test_storagedir.c \
 	src/test/test_threads.c \
+	src/test/test_token_bucket.c \
 	src/test/test_tortls.c \
 	src/test/test_util.c \
 	src/test/test_util_format.c \

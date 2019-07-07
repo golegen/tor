@@ -317,7 +317,7 @@ static config_var_t option_vars_[] = {
   OBSOLETE("AuthDirRejectUnlisted"),
   OBSOLETE("AuthDirListBadDirs"),
   V(AuthDirListBadExits,         BOOL,     "0"),
-  V(AuthDirMaxServersPerAddr,    UINT,     "2"),
+  V(AuthDirMaxServersPerAddr,    POSINT,     "2"),
   OBSOLETE("AuthDirMaxServersPerAuthAddr"),
   V(AuthDirHasIPv6Connectivity,  BOOL,     "0"),
   VAR("AuthoritativeDirectory",  BOOL, AuthoritativeDir,    "0"),
@@ -352,7 +352,7 @@ static config_var_t option_vars_[] = {
   V(ClientUseIPv6,               BOOL,     "0"),
   V(ClientUseIPv4,               BOOL,     "1"),
   V(ConsensusParams,             STRING,   NULL),
-  V(ConnLimit,                   UINT,     "1000"),
+  V(ConnLimit,                   POSINT,     "1000"),
   V(ConnDirectionStatistics,     BOOL,     "0"),
   V(ConstrainedSockets,          BOOL,     "0"),
   V(ConstrainedSockSize,         MEMUNIT,  "8192"),
@@ -402,14 +402,14 @@ static config_var_t option_vars_[] = {
   V(DormantCanceledByStartup,    BOOL,      "0"),
   /* DoS circuit creation options. */
   V(DoSCircuitCreationEnabled,   AUTOBOOL, "auto"),
-  V(DoSCircuitCreationMinConnections,      UINT, "0"),
-  V(DoSCircuitCreationRate,      UINT,     "0"),
-  V(DoSCircuitCreationBurst,     UINT,     "0"),
+  V(DoSCircuitCreationMinConnections,      POSINT, "0"),
+  V(DoSCircuitCreationRate,      POSINT,     "0"),
+  V(DoSCircuitCreationBurst,     POSINT,     "0"),
   V(DoSCircuitCreationDefenseType,         INT,  "0"),
   V(DoSCircuitCreationDefenseTimePeriod,   INTERVAL, "0"),
   /* DoS connection options. */
   V(DoSConnectionEnabled,        AUTOBOOL, "auto"),
-  V(DoSConnectionMaxConcurrentCount,       UINT, "0"),
+  V(DoSConnectionMaxConcurrentCount,       POSINT, "0"),
   V(DoSConnectionDefenseType,    INT,      "0"),
   /* DoS single hop client options. */
   V(DoSRefuseSingleHopClientRendezvous,    AUTOBOOL, "auto"),
@@ -522,7 +522,7 @@ static config_var_t option_vars_[] = {
   VAR("MapAddress",              LINELIST, AddressMap,           NULL),
   V(MaxAdvertisedBandwidth,      MEMUNIT,  "1 GB"),
   V(MaxCircuitDirtiness,         INTERVAL, "10 minutes"),
-  V(MaxClientCircuitsPending,    UINT,     "32"),
+  V(MaxClientCircuitsPending,    POSINT,     "32"),
   V(MaxConsensusAgeForDiffs,     INTERVAL, "0 seconds"),
   VAR("MaxMemInQueues",          MEMUNIT,   MaxMemInQueues_raw, "0"),
   OBSOLETE("MaxOnionsPending"),
@@ -539,10 +539,10 @@ static config_var_t option_vars_[] = {
   OBSOLETE("WarnUnsafeSocks"),
   VAR("NodeFamily",              LINELIST, NodeFamilies,         NULL),
   V(NoExec,                      BOOL,     "0"),
-  V(NumCPUs,                     UINT,     "0"),
-  V(NumDirectoryGuards,          UINT,     "0"),
-  V(NumEntryGuards,              UINT,     "0"),
-  V(NumPrimaryGuards,            UINT,     "0"),
+  V(NumCPUs,                     POSINT,     "0"),
+  V(NumDirectoryGuards,          POSINT,     "0"),
+  V(NumEntryGuards,              POSINT,     "0"),
+  V(NumPrimaryGuards,            POSINT,     "0"),
   V(OfflineMasterKey,            BOOL,     "0"),
   OBSOLETE("ORListenAddress"),
   VPORT(ORPort),
@@ -593,7 +593,7 @@ static config_var_t option_vars_[] = {
   V(RecommendedVersions,         LINELIST, NULL),
   V(RecommendedClientVersions,   LINELIST, NULL),
   V(RecommendedServerVersions,   LINELIST, NULL),
-  V(RecommendedPackages,         LINELIST, NULL),
+  OBSOLETE("RecommendedPackages"),
   V(ReducedConnectionPadding,    BOOL,     "0"),
   V(ConnectionPadding,           AUTOBOOL, "auto"),
   V(RefuseUnknownExits,          AUTOBOOL, "auto"),
@@ -666,7 +666,7 @@ static config_var_t option_vars_[] = {
   V(V3AuthVotingInterval,        INTERVAL, "1 hour"),
   V(V3AuthVoteDelay,             INTERVAL, "5 minutes"),
   V(V3AuthDistDelay,             INTERVAL, "5 minutes"),
-  V(V3AuthNIntervalsValid,       UINT,     "3"),
+  V(V3AuthNIntervalsValid,       POSINT,     "3"),
   V(V3AuthUseLegacyKey,          BOOL,     "0"),
   V(V3BandwidthsFile,            FILENAME, NULL),
   V(GuardfractionFile,           FILENAME, NULL),
@@ -715,7 +715,7 @@ static config_var_t option_vars_[] = {
    * blocked), but we also don't want to fail if only some mirrors are
    * blackholed. Clients will try 3 directories simultaneously.
    * (Relays never use simultaneous connections.) */
-  V(ClientBootstrapConsensusMaxInProgressTries, UINT, "3"),
+  V(ClientBootstrapConsensusMaxInProgressTries, POSINT, "3"),
   /* When a client has any running bridges, check each bridge occasionally,
     * whether or not that bridge is actually up. */
   V(TestingBridgeDownloadInitialDelay, CSV_INTERVAL,"10800"),
@@ -749,7 +749,7 @@ static const config_var_t testing_tor_network_defaults[] = {
   V(DirAllowPrivateAddresses,    BOOL,     "1"),
   V(EnforceDistinctSubnets,      BOOL,     "0"),
   V(AssumeReachable,             BOOL,     "1"),
-  V(AuthDirMaxServersPerAddr,    UINT,     "0"),
+  V(AuthDirMaxServersPerAddr,    POSINT,     "0"),
   V(ClientBootstrapConsensusAuthorityDownloadInitialDelay, CSV_INTERVAL, "0"),
   V(ClientBootstrapConsensusFallbackDownloadInitialDelay, CSV_INTERVAL, "0"),
   V(ClientBootstrapConsensusAuthorityOnlyDownloadInitialDelay, CSV_INTERVAL,
@@ -2387,7 +2387,8 @@ options_act(const or_options_t *old_options)
     if (!bool_eq(directory_fetches_dir_info_early(options),
                  directory_fetches_dir_info_early(old_options)) ||
         !bool_eq(directory_fetches_dir_info_later(options),
-                 directory_fetches_dir_info_later(old_options))) {
+                 directory_fetches_dir_info_later(old_options)) ||
+        !config_lines_eq(old_options->Bridges, options->Bridges)) {
       /* Make sure update_router_have_minimum_dir_info() gets called. */
       router_dir_info_changed();
       /* We might need to download a new consensus status later or sooner than
@@ -3521,13 +3522,6 @@ options_validate(or_options_t *old_options, or_options_t *options,
              "features to be broken in unpredictable ways.");
   }
 
-  for (cl = options->RecommendedPackages; cl; cl = cl->next) {
-    if (! validate_recommended_package_line(cl->value)) {
-      log_warn(LD_CONFIG, "Invalid RecommendedPackage line %s will be ignored",
-               escaped(cl->value));
-    }
-  }
-
   if (options->AuthoritativeDir) {
     if (!options->ContactInfo && !options->TestingTorNetwork)
       REJECT("Authoritative directory servers must set ContactInfo");
@@ -3550,7 +3544,7 @@ options_validate(or_options_t *old_options, or_options_t *options,
     tor_free(t);
     t = format_recommended_version_list(options->RecommendedServerVersions, 1);
     tor_free(t);
-#endif
+#endif /* defined(HAVE_MODULE_DIRAUTH) */
 
     if (options->UseEntryGuards) {
       log_info(LD_CONFIG, "Authoritative directory servers can't set "
@@ -3576,7 +3570,7 @@ options_validate(or_options_t *old_options, or_options_t *options,
     if (options->GuardfractionFile && !old_options) {
       dirserv_read_guardfraction_file(options->GuardfractionFile, NULL);
     }
-#endif
+#endif /* defined(HAVE_MODULE_DIRAUTH) */
   }
 
   if (options->AuthoritativeDir && !options->DirPort_set)
@@ -4604,7 +4598,7 @@ compute_real_max_mem_in_queues(const uint64_t val, int log_guess)
 #else
 /* On a 32-bit platform, we can't have 8GB of ram. */
 #define RAM_IS_VERY_LARGE(x) (0)
-#endif
+#endif /* SIZEOF_SIZE_T > 4 */
 
       if (RAM_IS_VERY_LARGE(ram)) {
         /* If we have 8 GB, or more, RAM available, we set the MaxMemInQueues
@@ -5776,7 +5770,7 @@ options_init_logs(const or_options_t *old_options, or_options_t *options,
 #else
         log_warn(LD_CONFIG, "Android logging is not supported"
                             " on this system. Sorry.");
-#endif // HAVE_ANDROID_LOG_H.
+#endif /* defined(HAVE_ANDROID_LOG_H) */
         goto cleanup;
       }
     }
@@ -7090,7 +7084,7 @@ parse_port_config(smartlist_t *out,
         if (!strcasecmpstart(elt, "SessionGroup=")) {
           int group = (int)tor_parse_long(elt+strlen("SessionGroup="),
                                           10, 0, INT_MAX, &ok, NULL);
-          if (!ok || !allow_no_stream_options) {
+          if (!ok || allow_no_stream_options) {
             log_warn(LD_CONFIG, "Invalid %sPort option '%s'",
                      portname, escaped(elt));
             goto err;
@@ -8183,10 +8177,9 @@ getinfo_helper_config(control_connection_t *conn,
       switch (var->type) {
         case CONFIG_TYPE_STRING: type = "String"; break;
         case CONFIG_TYPE_FILENAME: type = "Filename"; break;
-        case CONFIG_TYPE_UINT: type = "Integer"; break;
+        case CONFIG_TYPE_POSINT: type = "Integer"; break;
         case CONFIG_TYPE_UINT64: type = "Integer"; break;
         case CONFIG_TYPE_INT: type = "SignedInteger"; break;
-        case CONFIG_TYPE_PORT: type = "Port"; break;
         case CONFIG_TYPE_INTERVAL: type = "TimeInterval"; break;
         case CONFIG_TYPE_MSEC_INTERVAL: type = "TimeMsecInterval"; break;
         case CONFIG_TYPE_MEMUNIT: type = "DataSize"; break;

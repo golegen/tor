@@ -31,14 +31,14 @@
 
 typedef struct {
   int severity;
-  uint32_t domain;
+  log_domain_mask_t domain;
   char *msg;
 } logmsg_t;
 
 static smartlist_t *messages = NULL;
 
 static void
-log_cback(int severity, uint32_t domain, const char *msg)
+log_cback(int severity, log_domain_mask_t domain, const char *msg)
 {
   logmsg_t *x = tor_malloc(sizeof(*x));
   x->severity = severity;
@@ -258,13 +258,17 @@ test_options_validate(void *arg)
   WANT_ERR("BridgeRelay 1\nDirCache 0",
            "We're a bridge but DirCache is disabled.", PH_VALIDATE);
 
+  // XXXX We should replace this with a more full error message once #29211
+  // XXXX is done.  It is truncated for now because at the current stage
+  // XXXX of refactoring, we can't give a full error message like before.
   WANT_ERR_LOG("HeartbeatPeriod 21 snarks",
-               "Interval 'HeartbeatPeriod 21 snarks' is malformed or"
-               " out of bounds.", LOG_WARN, "Unknown unit 'snarks'.",
+               "malformed or out of bounds", LOG_WARN,
+               "Unknown unit 'snarks'.",
                PH_ASSIGN);
+  // XXXX As above.
   WANT_ERR_LOG("LogTimeGranularity 21 snarks",
-               "Msec interval 'LogTimeGranularity 21 snarks' is malformed or"
-               " out of bounds.", LOG_WARN, "Unknown unit 'snarks'.",
+               "malformed or out of bounds", LOG_WARN,
+               "Unknown unit 'snarks'.",
                PH_ASSIGN);
   OK("HeartbeatPeriod 1 hour", PH_VALIDATE);
   OK("LogTimeGranularity 100 milliseconds", PH_VALIDATE);
